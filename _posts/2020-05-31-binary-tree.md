@@ -1,7 +1,7 @@
 ---
 title: "Binary Tree"
 date: 2020-05-31
-categories: 자료구조 파이썬 이진트리 BinaryTree
+categories: 자료구조 python 이진트리 BinaryTree
 ---
 
 1. 이진 트리 구현하기 (1) - 리스트 활용
