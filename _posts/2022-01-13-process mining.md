@@ -74,3 +74,11 @@ Event vs Activity
 ![image-20220113114307179](/Users/kakao/Library/Application Support/typora-user-images/image-20220113114307179.png)
 
 ![image-20220113114319249](/Users/kakao/Library/Application Support/typora-user-images/image-20220113114319249.png)
+
+
+
+## Reference
+
+* https://pm4py.fit.fraunhofer.de/
+* https://medium.com/@c3_62722/process-mining-with-python-tutorial-a-healthcare-application-part-1-ae02027a050
+* 
