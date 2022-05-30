@@ -1,6 +1,6 @@
  
 
-````yaml
+````
 title: "conda 가상환경을 jupyter notebook kernel로 설정하기"
 date: 2022-01-17
 tags:

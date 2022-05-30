@@ -2,7 +2,8 @@
 title: "블로그 개설"
 date: 2020-05-30
 tags:
-    - Blog test
+    - Blog 
+    - test
 categories: 
     - Blog
 ---
