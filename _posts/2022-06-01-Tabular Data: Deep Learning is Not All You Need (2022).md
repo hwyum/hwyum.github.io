@@ -23,7 +23,7 @@ toc_label: "페이지 목차"
 2개의 메인 카테고리가 존재함. 
 
 - Differentiable trees: 
-  - DT를 미문 가능하게 만드는 방법을 찾는 것.
+  - DT를 미분 가능하게 만드는 방법을 찾는 것.
   - 기존 DT는 미분할 수 없어 gradient optimization이 불가능. => 내부 노드에서의 decision function을 스무딩해서 tree function과 tree rountingAttention-based models
 - Attention-based models:
   - tabular deep network에 attention과 같은 모듈을 도입함. 
@@ -163,4 +163,46 @@ DNF-Net의 핵심 피쳐는 DNNF(disjunctive normal neural form) 블록인데, �
 
 ### 1-D CNN
 
-최근에, 캐글에서 Tabular data에 대해 1-D CNN 모형이 가장 좋은 단일 모델 성능을 보인 바 있습니다 ([Baosenguo, 2021](https://github.com/baosenguo/Kaggle-MoA-2nd-Place-Solution)). 이 모델은 CNN구조가 ‘feature extraction’에 좋은 성능을 보인다는 아이디어에 기반한 것이었습니다. 여전히 tabular data에서 CNN은 거의 활용되지 않습니다. 
+참고: https://github.com/baosenguo/Kaggle-MoA-2nd-Place-Solution/blob/main/2nd%20Place%20Solution.pdf
+
+최근에, 캐글에서 Tabular data에 대해 1-D CNN 모형이 가장 좋은 단일 모델 성능을 보인 바 있습니다 ([Baosenguo, 2021](https://github.com/baosenguo/Kaggle-MoA-2nd-Place-Solution)). 이 모델은 CNN구조가 ‘feature extraction’에 좋은 성능을 보인다는 아이디어에 기반한 것이었습니다. 여전히 tabular data에서 CNN은 거의 활용되지 않습니다. 왜냐하면 피쳐들의 순서가 locality특성을 가지지 않기 때문입니다. 
+
+이 모델에서는, FC Layer가 locality characteristic을 가지는 큰 사이즈의 피쳐를 만드는 데에 사용이 됩니다. 그리고, 여러 개의 1D-Conv layer들이 shorcut-like connection과 함께 따라오게 됩니다. 
+
+
+
+## 2.2 Model Ensemble
+
+앙상블 학습은 성능을 향상시키고 분산을 줄이는 방법론으로 잘 알려져있습니다. 여러 개의 모델을 학습시키고, 그들의 결과를 결합하는 것입니다. 
+
+앙상블 학습은, 다른 머신러닝 방법론들이 각기 다른 상황에서 더 성능이 좋거나, 실수를 한다는 가정을 전제하고 있습니다. 
+
+앙상블 학습은 대개 두 개의 메인 타입으로 분류가 됩니다. 
+
+1. Randomization에 기반한 테크닉
+   - Random Forest를 그 예로 들 수 있습니다. - 각각의 앙상블 멤버들은 서로 다른 초기 파라미터 설정과 학습 데이터를 가지고 있습니다. 
+   - 베이스 러너들은 서로간의 상호작용없이 동시 다발적으로 학습이 가능합니다. 
+2. Boosting-based 방법론
+   - 베이스 러너들이 연속적으로 (Sequentially) 학습되면서 모델을 적합 시키게 됩니다. 
+
+대부분의 앙상블에서 Decision Tree가 베이스 러너로 활용이 됩니다. 
+
+본 연구에서는 앙상블에 5개 분류기를 포함시켰음: TabNet, NODE, DNF-Net, 1D-CNN, XGBoost
+
+실용적이고 직관적인 앙상블을 구축하기 위해, 두 가지 다른 버전을 제안하였음
+
+	- (1) 각 분류기를 동일한 weight로 취급
+	- (2) 각 분류기에서 나온 예측들에 대해 가중 평균을 취함. 
+
+데이터가 많을 수록 일반적으로 성능이 좋기 때문에, 각 모델을 학습 시킬 때에도 전체 학습 데이터를 활용하였음.
+
+# 3. Comparing the Models
+
+## 3.1 Experimental Setup
+
+## 3.2 Results
+
+
+
+# 4. Discussion and Conclusions
+
