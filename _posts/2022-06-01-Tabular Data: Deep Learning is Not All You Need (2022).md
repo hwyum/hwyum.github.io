@@ -96,7 +96,7 @@ toc_label: "페이지 목차"
 - 만약에 같은 프로세스를 확률적인 용어로 생각하게 된다면, 특정 샘플에서 해당 path로 갈 확률은 해당 패스에 들어가 있는 모든 노드에 있어서 1이 되어야 합니다. 해당 path의 마지막 leaf노드에 도달하기 위해서 말이죠. 
     - 확률론적인 패러다임에서 우리는 전체 path를 따라 샘플이 왼쪽이나 오른쪽으로가는 확률을 곱해서 leaf노드에 도달할 확률을 구할 수 있게 됩니다. 
   - 즉, 샘플이 표시된 leaf node에 도달하는 확률은, $d_1 * \bar{d}_2 * \bar{d}_5$가 됩니다. 
-      
+    
 
 
 
@@ -208,13 +208,11 @@ DNF-Net의 핵심 피쳐는 DNNF(disjunctive normal neural form) 블록인데, �
 
 실험에는 11개의 Tabular dataset을 사용하였습니다. 데이터셋은 다양한 분류와 회귀 문제를 포함합니다. 데이터셋은 10개에서 2,000개의 피쳐를 포함하고, 1개에서 7개의 클래스, 7천개에서 백만 개의 샘플을 포함합니다. 
 
-![image-20220601150711150](/Users/kakao/Library/Application Support/typora-user-images/image-20220601150711150.png)
-
 추가적으로, 수치형 / 범주형 피쳐의 갯수도 데이터 셋에 따라 상이합니다. 
 
 TabNet, DNF-Net, NODE 페이퍼에서 사용된 9개의 데이터셋 (각 논문당 3개의 데이터셋)을 사용하였고, 아무 논문에서도 사용하지 않은 2개의 캐글 데이터셋을 추가하였습니다. 각각의 데이터셋은 원 논문과 같은 방법으로 전처리 / 학습되었습니다. 데이터는 zero mean and unit variance로 표준화  되었고, standardization의 통계량은 학습 데이터 기반해 계산되었다고 합니다. 
 
-
+![image-20220601160336905](../assets/images/image-20220601160336905-4067021.png)
 
 ### 3.1.2 Implementation Details
 
@@ -230,11 +228,27 @@ Model의 하이퍼파라미터를 선택하기 위해 Bayesian Optimization을 �
 
 #### Statistical significance test
 
-모델 성능 측정을 위해 RMSE 또는 cross-entropy loss 활용에 더하여, 모델간 차이가 통계적으로 유의미한지 평가하는 과정이 필요합니다. Friedman의 테스트(Friedman’s test)는 통계적 유의성을 평가하기 위해 널리 쓰이는 비모수적 방법론입니다.
+모델 성능 측정을 위해 RMSE 또는 cross-entropy loss 활용에 더하여, 모델간 차이가 통계적으로 유의미한지 평가하는 과정이 필요합니다. Friedman의 테스트(Friedman’s test)는 통계적 유의성을 평가하기 위해 널리 쓰이는 비모수적 방법론입니다. 이 방법의 장점은, 각 그룹의 데이터가 normal 분포를 따른다는 가정을 하지 않는 것입니다. 통계적으로 유의미하게 차이가 있는지 살펴보기 위해 프리드만 테스트를 활용해서, 다른 모델들의 에러를 비교하였습니다. 
+
+omnibus(?) Friedman test를 적용하고 나서, 전체 분류기에 대해 서로서로 혹은, 베이스라인 분류기에 대한 비교를 수행하였습니다. 95% 신뢰수준으로 진행하였습니다.
+
+#### Training
+
+Classification 데이터셋에 대해, 우리는 cross-entropy loss를 최소화 시킵니다. 회귀 데이터셋에 있어서는, MSE(Mean Squred Error)를 최소화하고 관찰하게 됩니다. 
+
+deep model에 있어서는 원 논문에서의 implementation을 따랐고, learning rate schedule없이 Adam Optimizer를 사용하였습니다. 각 데이터셋에 있어, 모든 모델에 있어 배치 사이즈도 최적화 하였습니다. 
+
+validation 셋에 대해, 100번의 연속적인 epoch 에서 성능 향상 없을 때까지 학습을 진행하였습니다. 
 
 ## 3.2 Results
 
+### Do the deep models generalize well to other datasets? 
 
+과연 딥 모델이 다른 데이터셋에 대해서도 잘 일반화했을까요?
+
+원 논문에 포함되지 않은 다른 데이터셋에서도 좋은 성능을 내는지를 탐색하였고 XGBoost와도 비교하였습니다. 
+
+![image-20220601160401703](../assets/images/image-20220601160401703.png)
 
 # 4. Discussion and Conclusions
 
