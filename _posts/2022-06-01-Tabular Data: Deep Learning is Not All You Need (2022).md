@@ -189,16 +189,48 @@ DNF-Net의 핵심 피쳐는 DNNF(disjunctive normal neural form) 블록인데, �
 
 본 연구에서는 앙상블에 5개 분류기를 포함시켰음: TabNet, NODE, DNF-Net, 1D-CNN, XGBoost
 
-실용적이고 직관적인 앙상블을 구축하기 위해, 두 가지 다른 버전을 제안하였음
+실용적이고 직관적인 앙상블을 구축하기 위해, 두 가지 다른 버전을 제안하였습니다.
 
 	- (1) 각 분류기를 동일한 weight로 취급
 	- (2) 각 분류기에서 나온 예측들에 대해 가중 평균을 취함. 
 
-데이터가 많을 수록 일반적으로 성능이 좋기 때문에, 각 모델을 학습 시킬 때에도 전체 학습 데이터를 활용하였음.
+데이터가 많을 수록 일반적으로 성능이 좋기 때문에, 각 모델을 학습 시킬 때에도 전체 학습 데이터를 활용하였습니다.
 
 # 3. Comparing the Models
 
+실제 적용을 위해서 모델은 반드시 (1) 정확하게 작동해야 합니다. (2) 학습과 추론이 효율적이어야 합니다. (3) 최적화(Optimization) 시간이 짧아야 합니다. (빠른 하이퍼파라미터 튜닝)
+
+
+
 ## 3.1 Experimental Setup
+
+### 3.1.1 Data-sets Description
+
+실험에는 11개의 Tabular dataset을 사용하였습니다. 데이터셋은 다양한 분류와 회귀 문제를 포함합니다. 데이터셋은 10개에서 2,000개의 피쳐를 포함하고, 1개에서 7개의 클래스, 7천개에서 백만 개의 샘플을 포함합니다. 
+
+![image-20220601150711150](/Users/kakao/Library/Application Support/typora-user-images/image-20220601150711150.png)
+
+추가적으로, 수치형 / 범주형 피쳐의 갯수도 데이터 셋에 따라 상이합니다. 
+
+TabNet, DNF-Net, NODE 페이퍼에서 사용된 9개의 데이터셋 (각 논문당 3개의 데이터셋)을 사용하였고, 아무 논문에서도 사용하지 않은 2개의 캐글 데이터셋을 추가하였습니다. 각각의 데이터셋은 원 논문과 같은 방법으로 전처리 / 학습되었습니다. 데이터는 zero mean and unit variance로 표준화  되었고, standardization의 통계량은 학습 데이터 기반해 계산되었다고 합니다. 
+
+
+
+### 3.1.2 Implementation Details
+
+#### The Optimization Process
+
+Model의 하이퍼파라미터를 선택하기 위해 Bayesian Optimization을 사용하는 HyperOpt를 활용했습니다. 하이퍼파라미터 서치는 데이터셋별로 validation set에 대한 결과를 최적화하기 위해 1,000 스텝 수행하였습니다. 최초의 하이퍼파라미터는 원 논문에서 가져왔습니다. 각 모델은 6-9개의 핵심 하이퍼파라미터가 존재했습니다. 딥러닝 모델의 경우 learning rate, layer 수, node 수를 포함합니다.
+
+데이터셋은 training, validation, test셋으로 원 논문에서와 같은 방식으로 나누었습니다. 
+
+#### Metrics and evaluation
+
+2진 분류 문제에 있어서, cross-entroy loss를 기록하였습니다. 회귀 문제에 있어서는 RMSE(Root Mean Square Error)를 측정하였습니다. 각각의 튜닝된 설정에 대해 4개의 다른 랜덤 시드를 활용해 실험하였고, 성능은 테스트셋에 대해 측정되었습니다. 
+
+#### Statistical significance test
+
+모델 성능 측정을 위해 RMSE 또는 cross-entropy loss 활용에 더하여, 모델간 차이가 통계적으로 유의미한지 평가하는 과정이 필요합니다. Friedman의 테스트(Friedman’s test)는 통계적 유의성을 평가하기 위해 널리 쓰이는 비모수적 방법론입니다.
 
 ## 3.2 Results
 
