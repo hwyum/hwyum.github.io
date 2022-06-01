@@ -2,7 +2,9 @@
 title: "Tabular Data: Deep Learning is Not All You Need (2022)"
 date: 2022-06-01
 tags:
-    - ML Tabular Data XGBoost
+    - ML 
+    - Tabular Data 
+    - XGBoost
 categories: 
     - ML Papers
 toc: true
