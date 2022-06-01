@@ -87,4 +87,7 @@ toc_label: "페이지 목차"
     ![img](https://deepandshallowml.files.wordpress.com/2020/12/image-1.png)
 
     - 여기에서 leaf node는 class label에 대한 분포 이므로, 이를 sigmoid나 softmax activation으로 대체할 수 있을 것입니다. -> 이것은 미분 가능합니다. 
-    - Decision node를 살펴봅니다. Decision node의 목적은, 샘플을 left나 right로 라우팅시킬 건지에 대한 의사결정을 합니다. 이러한 decision들을 $d_i$ 
+
+    - Decision node를 살펴봅니다. Decision node의 목적은, 샘플을 left나 right로 라우팅시킬 건지에 대한 의사결정을 합니다. 이러한 decision들을 $d_{i}$와 $\bar{d}_{i}$ 라고 부릅시다. 
+
+      
