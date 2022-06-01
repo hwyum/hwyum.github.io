@@ -12,15 +12,33 @@ toc_sticky: true
 toc_label: "페이지 목차"
 ---
 
+# Paper
+
+[Tabular Data: Deep Learning is Not All You Need (2022)](https://arxiv.org/abs/2106.03253)
+
+## 저자
+
+- Ravid Shwartz-Ziv, Intel (NYU)
+
+- Amitai Armon, Intel
+
+
+
 # 1. Intrudoction
 
-
+- 딥러닝의 이론적인 이점에도 불구하고, DNN이 tabular data에 적용될 때, 지역성(locality), data sparsity (missing values), mixed feature types (숫자, 숫서 및 범주형), 그리고 데이터셋 구조에 대한 사전 지식 부족 (text나 image 데이터와 다르게)과 같은 많은 문제를 제기합니다. 
+- 최근에 tabular data에 대한 다양한 deep network 개발이 시도되었고, 그중 일부는 GBDT보다 성능이 우수하다고 주장하고 있습니다.하지만, GLUE와 같은 표준적인 벤치마크가 없고, tabular data model간 정확한 비교가 어려웠습니다. 
+- Tabular data에 대한 딥러닝 연구가 증가하는 만큼, 이제 해당 분야에서의 최근 발전을 엄밀하게 리뷰할 시점이 되었습니다. 
+- 본 연구의 목적은 최근 제안된 딥 모델중에서 Tabular data 문제에 있어 실제 추천되어야 하는 옵션이 있는지에 대해 탐구하고자 하는 것입니다. 
+  - 해당 방법론을 제안한 논문에 등장하지 않은 데이터 셋에 대해서도 더 좋은 성능을 보이는가?
+  - 학습시간, 하이퍼파라메터 서치에 있어 다른 모델과 비교했을 때 얼마나 시간이 걸리는가?
+- 최근에 제안된 4개의 논문과 11개의 데이터셋을 고려했고, 그중 9개를 본 연구에서 활용하였습니다.
 
 # 2. Background
 
 ## Tabular Data에서의 딥러닝
 
-2개의 메인 카테고리가 존재함. 
+2개의 메인 카테고리가 존재합니다.
 
 - Differentiable trees: 
   - DT를 미분 가능하게 만드는 방법을 찾는 것.
@@ -117,7 +135,7 @@ tree output을 미분 가능하게 하려면, splitting feature choice(f)와 thr
 
 전통적인 Tree에서는, split을 하기 위한 feature choice가 결정적(deterministic)인 의사결정에 따릅니다. 그러나 미분가능성을 위해서는 조금 더 부드러운 접근이 필요합니다. 즉, `weighted sum of features`가 되어야 하며, 각각의 weight는 학습이 됩니다. 일반적으로 피쳐들에 대한 Softmax choice를 생각할 수 있습니다만, 우리는 보다 sparse한 feature selection을 원합니다. 그러한 효과를 위해서 NODE는 학습가능한 피쳐 셀렉션 matrix $F\in R^{d \times n}$에 $\alpha$-entmax transformation (Peters et al., 2019)(??)을 사용합니다. 
 
-	- ![img](https://deepandshallowml.files.wordpress.com/2020/12/image-2.png)
+![img](https://deepandshallowml.files.wordpress.com/2020/12/image-2.png)
 
 유사하게, Heaviside function (step function)도 two-class entmax로 완화(relax)시킬 수 있습니다. 다른 피쳐들이, 다른 스케일을 가질 수 있도록, entmax를 파라미터 $\tau$로 스케일 합니다. 
 
@@ -256,7 +274,84 @@ Table 2(위)는 데이터셋별 성능의 평균과 평균에 대한 standard er
 
 위의 결과로부터 몇 가지 관찰을 할 수 있었습니다. 
 
-- 
+- 대부분의 케이스에서, 모델들은 보지 못한 데이터에 대해 낮은 성능을 보였습니다. 
+- XGBoost 모델은 일반적으로 deep model들의 성능을 능가했습니다. 11개의 데이터셋 중 8개의 데이터에서 XGBoost가 deep model들의 성능을 능가했습니다. 이러한 데이터셋에 대해서 결과는 유의미했습니다. (p<0.005)
+- 일관성있게 다른 모델들보다 우위에 있는 deep model은 없었습니다. 각각의 deep model은 각 모델에 대한 원 논문에 포함된 데이터셋에서만 좋은 성능을 보였습니다. 
+- 대부분의 경우에 deep model과 XGBoost의 앙상블이 성능 우위를 보였습니다. 11개중 7개의 데이터셋에서 deep model과 XGBoost의 앙상블이 하나의 deep model 보다 유의미하게 좋은 성능을 보였습니다. 
+
+직접적으로 모델을 비교하기 위해서, 각각의 데이터셋에 대해 best model 대비해서의 상대적인 성능(성능이 떨어지는 정도)을 계산하였습니다. 
+
+![img](../assets/images/image-20220601162540501.png)
+
+각 모델에 대해서 보지 않은 데이터셋에 대한 상대적 성능 비교 결과를 보면, 모든 모델에 대한 앙상블이 가장 높은 성능을 보임을 확인할 수 있습니다. 
+
+위의 결과는 놀랍습니다. Deep model의 원 논문에서 보지 못한 데이터 셋에 대해서는, deep model이 XGBoost보다 낮은 성능을 보이고 있습니다. 이러한 결과에는 몇 가지 이유가 있는 것으로 보입니다. 
+
+1. 먼저 selection bias의 가능성이 존재합니다. 
+   - 각각의 논문은 자연스럽게 모델이 잘 작동하는 특정 데이터셋에서의 모델 성능을 나타내고 있을 수 있습니다. 
+2. 두 번째 가능성은, 하이퍼파라미터 최적화(optimization)에 있어서의 다른 점들일 수 있습니다. 
+   - 각 논문은 모델의 하이퍼파라미터를 논문에 나타난 데이터셋에서 더 광범위하게 서치했을 수 있습니다. 그것이 더 좋은 결과로 나타날 수 있습니다. 
+
+### Do we need both XGBoost and deep networks?
+
+여러 데이터셋에 걸쳐서, XGBoost 와 딥모델의 앙상블이 가장 좋은 성능을 보인 것으로 나타났습니다. 앙상블의 어떤 컴포넌트가 필수적인지에 대해 확인해보고자 합니다. 
+
+XGBoost와 nondeep model (SVM, CatBoost)와의 앙상블을 학습시켰습니다. table [[2]](https://hwyum.github.io/ml%20papers/Tabular-Data-Deep-Learning-is-Not-All-You-Need-(2022)/#do-the-deep-models-generalize-well-to-other-datasets)를 살펴 보면, 클래식 모델들 간의 앙상블이, deep network와 XGBoost와의 앙상블보다 성능이 낮은 것을 알 수 있습니다. 또한, XGBoost를 제외한 deep model로만 구성된 앙상블의 성능도 좋지 않습니다. 이로부터 deep model과 XGBoost의 앙상블이 여러 데이터셋에서 성능 우위를 보위고 있음을 알 수 있습니다. 
+
+
+
+### Subset of models
+
+실제 적용시, 여러 모델을 활용하게 되면 추가적인 연산이 필요합니다. 따라서, 앙상블에 속한 모델들의 subset을 고려했을 때 performance와 computation간의 어떤 tradeoff가 있는지를 조사해보았습니다. 
+
+subset을 선택하는 데에는 아래와 같이 여러 방법이 있을 수 있습니다. 
+
+​	(1) validation loss에 기반해, validation loss가 낮은 모델을 먼저 선택함. 
+
+​	(2) 모델별로 각 example에 대한 불확실성에 기반해, 가장 신뢰도가 높은 모델을 선택함. (어떤 종류의 불확실성 메저가 필요함.)
+
+​	(3) Random한 순서에 기반함.
+
+Figure 1을 살펴보면, 이러한 모델 선택 방법들을 보지 못한 데이터셋(Shrutime)에 대해서 비교되어 있습니다. 가장 좋은 선택 방법은 모델의 validation loss에 기반한 방법이었습니다. 이러한 방법으로 optimal한 성능을 얻는 데에 있어 단 3개의 모델이 필요하였습니다. 
+
+<img src="../assets/images/image-20220601170037541.png" alt="image-20220601170037541" style="zoom:80%;" />
+
+### How difficult is the optimization?
+
+현실 세계에서는 새로운 데이터셋에 대해 모델을 학습시키고 하이퍼파라미터 튜닝을 하는데 있어 시간과 자원에 제한이 있습니다. 따라서 각각의 모델에 대해 이러한 부분이 얼마나 어려운지에 대해 관심이 있을 것입니다. 이 부분을 측정하는 하나의 방법은, 각 모델이 필요로하는 연산의 수 (# of computations)를 계산하는 것입니다. 이것은 일반적으로 FLOPS (floting-point operations per second)로 측정 됩니다. 
+
+Tang et al. (2018)dms FLOPS 수가 파라미터 수보다 에너지 사용과 대기 시간(latency) 측정에 좋은 indicator라고 제안하였습니다. 하지만 각각의 하이퍼파라메터 셋팅이 다른 FLOPS수를 가지고 있어서, 하이퍼파라미터 최적화에 있어 이 방법으로 다른 모델을 비교하는 것은 불가능합니다. 
+
+다른 방법으로는, 모델 학습 및 최적화에 소요되는 시간을 비교하는 것입니다. 일반적으로 XGBoost가 유의미하게 deep network보다 빠르다는 것을 확인할 수 있었습니다. 하지만, runtime에서의 차이점은 software의 최적화 수준에 영향을 많이 받습니다. 
+
+다른 방법으로는 하이퍼파라미터 최적화 프로세스가 plateau에 도달할 때까지의 iteration 수를 비교하는 것입니다.이것은 모델 고유의 특성을 나타내는 것으로 software optimization에 의존적이지 않습니다. 
+
+Figure 2은 Shrutime dataset에 대해 모델의 하이퍼파라미터 최적화 프로세스에서의 iternation 수의 함수로 모델의 성능을 나타낸 것입니다. 
+
+<img src="../assets/images/image-20220601171514176.png" alt="img" style="zoom:50%;" />
+
+XGBoost가 Deep model들 대비 성능 우위에 있음을 확인했습니다. 즉, good performance로 더욱 빨리 수렴했습니다. 
+
+이러한 결과는 여러 가지 요소에 영향을 받았을 수 있습니다. 
+
+1. 우리는 **Bayesian hyperparameter optimization process**를 사용하였고, 다른 optimization process에 대해서는 결과가 다를 수 있습니다. 
+2. XGBoost의 initial hyperparameter들이 더욱 Robust 할 수 있습니다. 왜냐하면, 더 많은 데이터셋들을 기반으로 셋팅된 값일 수 있기 때문입니다. Deep model에 대해서도 더 좋은 초기값을 발견하게 될 수도 있습니다. 
+3. XGBoost모델이 더욱 robust하고 optimize가 쉬운 고유의 특성을 가지고 있을 수 있습니다. 
+
+앞으로 더욱 연구되면 흥미로울 것입니다. 
 
 # 4. Discussion and Conclusions
 
+본 연구에 의하면, deep model은 원 논문에서 다루지 않은 데이터셋에 대해서는 XGBoost대비 낮은 성능을 나타냈습니다. 따라서, 우리는 deep model과 XGBoost의 앙상블을 제안합니다. 이러한 앙상블 모델이 어떠한 단독 모델보다, 그리고 classical 앙상블 모델 보다 높은 성능을 보여주었습니다. 
+
+real-world application에서 중요한 또한 성능 vs. Computational inference cost 관점에서의 트레이드오프, 하이퍼파라미터 최적화 관점에서 탐구하였습니다. 우리의 연구는 deep model의 성능을 양념?(grain of salt) 정도로만 받아들여야 한다는 것을 보여주었습니다. 
+
+추가적으로, 새로운 데이터셋에 있어 XGBoost 대비해서 deep model 들을 최적화 하는 것이 더 어렵습니다. 
+
+그럼에도, 우리는 XGBoost와 deep model의 앙상블이 우리가 탐색한 데이터셋에 있어서는 가장 좋은 결과를 보여주었습니다. 
+
+현실적으로, 시간 제약하에서 XGBoost가 가장 좋은 성능과 가장 쉬운 최적화를 얻을 수 있을 것입니다. 하지만 XGBoost모델 단독으로는 가장 좋은 성능을 얻기에 충분하지 않을 수 있습니다. 우리는 최고의 성능을 얻기 위해 앙상블 모델에 deep model을 추가하는 것이 필요할 수 있을 것입니다. 
+
+결론적으로, tabular datad에 대한 deep model의 유의미한 진전에도 불구하고, 우리가 탐색한 데이터에 한해서는 XGBoost를 능가하지 못하였습니다. 이 분야에 있어 추가적인 연구가 필요할 것입니다. 
+
+새로운 deep model을 개발함에 있어, 최적화에 용이한 모델, XGBoost와 이러한 파라미터 관점에서 경쟁할 수 있는 모델 개발이 하나의 연구 방향이 되어야 할 것입니다. 

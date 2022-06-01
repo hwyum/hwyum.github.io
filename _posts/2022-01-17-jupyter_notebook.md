@@ -1,13 +1,17 @@
- 
-
-````
+---
 title: "conda 가상환경을 jupyter notebook kernel로 설정하기"
 date: 2022-01-17
 tags:
-    - python jupyter
+    - python
+    - jupyter
 categories: 
     - python
-````
+toc: true
+toc_sticky: true
+toc_label: "페이지 목차"
+---
+
+
 
 
 

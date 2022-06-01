@@ -2,7 +2,9 @@
 title: "Random Forest Feature Importance"
 date: 2022-05-18
 tags:
-    - ML Python RandomForest
+    - ML 
+    - Python 
+    - RandomForest
 categories: 
     - ML
 toc: true
