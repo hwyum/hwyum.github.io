@@ -212,7 +212,7 @@ DNF-Net의 핵심 피쳐는 DNNF(disjunctive normal neural form) 블록인데, �
 
 TabNet, DNF-Net, NODE 페이퍼에서 사용된 9개의 데이터셋 (각 논문당 3개의 데이터셋)을 사용하였고, 아무 논문에서도 사용하지 않은 2개의 캐글 데이터셋을 추가하였습니다. 각각의 데이터셋은 원 논문과 같은 방법으로 전처리 / 학습되었습니다. 데이터는 zero mean and unit variance로 표준화  되었고, standardization의 통계량은 학습 데이터 기반해 계산되었다고 합니다. 
 
-![image-20220601160336905](../assets/images/image-20220601160336905-4067021.png)
+![img](https://hwyum.github.io/assets/images/image-20220601160336905-4067021.png)
 
 ### 3.1.2 Implementation Details
 
@@ -248,7 +248,7 @@ validation 셋에 대해, 100번의 연속적인 epoch 에서 성능 향상 없�
 
 원 논문에 포함되지 않은 다른 데이터셋에서도 좋은 성능을 내는지를 탐색하였고 XGBoost와도 비교하였습니다. 
 
-![image-20220601160401703](../assets/images/image-20220601160401703.png)
+![img](https://hwyum.github.io/assets/images/image-20220601160401703.png)
 
 Table 2(위)는 데이터셋별 성능의 평균과 평균에 대한 standard error를 나타내고 있습니다. (값이 낮을 수록 좋은 성능을 의미합니다)
 
