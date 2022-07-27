@@ -42,7 +42,7 @@ toc_label: "페이지 목차"
 
 - Differentiable trees: 
   - DT를 미분 가능하게 만드는 방법을 찾는 것.
-  - 기존 DT는 미분할 수 없어 gradient optimization이 불가능. => 내부 노드에서의 decision function을 스무딩해서 tree function과 tree rountingAttention-based models
+  - 기존 DT는 미분할 수 없어 gradient optimization이 불가능. => 내부 노드에서의 decision function을 스무딩해서 tree function과 tree rounting을 미분가능하게 만듬.
 - Attention-based models:
   - tabular deep network에 attention과 같은 모듈을 도입함. 
   - 최근의 연구들은, 'inter-sample' attention (주어진 샘플 내 피쳐간 interaction)과 'intra-sample attention'(데이터 포인트간의 interaction)을 모두 제안하였음. 
@@ -76,7 +76,7 @@ toc_label: "페이지 목차"
 - Encoder가 존재하고, 인코더 안에서 시퀀셜한 결정단계가 sparse한 학습된 마스크를 사용하여 피쳐를 인코딩하고,
 - 각 row별로 attention을 활용하여 유의미한 피쳐를 선택하게 됩니다. Sparsemax layer들을 활용해서 인코더는 작은 셋의 피쳐들을 선택하게 됩니다.
   - TabNet Encoder가 Feature Engineering효과를 내고, decision making 부분을 통해 feature selection이 이루어짐.
-  - Sequential Attention을 사용하여 각 의사 결정 단계에서 추론할 피쳐를 선택하여 학습 능력이 가장 두드러진 기능에 사용되므로, interpretability와 효과적인 학습을 가능하게 함. 
+  - Sequential Attention을 사용하여 각 의사 결정 단계에서 추론할 피쳐를 선택하여 학습 능력이 가장 두드러진 피쳐에 사용되므로, interpretability와 효과적인 학습을 가능하게 함. 
   - ![img](https://blog.kakaocdn.net/dn/ELrsC/btqNMM0LiTK/L7JEndHQxq8mMmLt6ohVpk/img.png)
 
 - Learning mask의 장점은 피쳐가 all-or-nothing이 아니라는 것입니다. feature에 대한 hard threshold를 사용하기 보다, learnable mask는 soft decision을 할 수 있게 만들어서, 기존의 미분이 불가능한 피쳐 셀렉션 방식을 완화시키게 됩니다. 
