@@ -1,5 +1,14 @@
 ---
-
+title: Flutter Patterns
+date: 2023-10-18
+tags: 
+    - flutter
+    - riverpod
+categories: 
+    - flutter
+toc: true
+toc_sticky: true
+toc_label: "페이지 목차"
 ---
 
 ## Riverpod_generator
